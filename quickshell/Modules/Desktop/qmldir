@@ -1,0 +1,12 @@
+module qs.Modules.Desktop
+DesktopCpuTempWidget 1.0 BuiltinWidgets/DesktopCpuTempWidget.qml
+DesktopGpuTempWidget 1.0 BuiltinWidgets/DesktopGpuTempWidget.qml
+DesktopSystemMonitorWidget 1.0 BuiltinWidgets/SystemMonitorWidget.qml
+DesktopClockWidget 1.0 BuiltinWidgets/DesktopClockWidget.qml
+DesktopTerminalWidget 1.0 BuiltinWidgets/DesktopTerminalWidget.qml
+DesktopDarkDashWidget 1.0 BuiltinWidgets/DesktopDarkDashWidget.qml
+DesktopWeatherWidget 1.0 BuiltinWidgets/DesktopWeatherWidget.qml
+DesktopIconsWidget 1.0 BuiltinWidgets/DesktopIconsWidget.qml
+DesktopWidgetLayer 1.0 DesktopWidgetLayer.qml
+DesktopPluginWrapper 1.0 DesktopPluginWrapper.qml
+

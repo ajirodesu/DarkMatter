@@ -1,0 +1,1530 @@
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import Quickshell.Widgets
+import qs.Common
+import qs.Widgets
+import qs.Modules.Settings
+import qs.Services
+
+Item {
+    id: dockTab
+
+    DarkFlickable {
+        anchors.fill: parent
+        anchors.topMargin: Theme.spacingL
+        clip: true
+        contentHeight: mainColumn.height
+        contentWidth: width
+
+        Column {
+            id: mainColumn
+            width: parent.width
+            spacing: Theme.spacingXL
+
+            StyledRect {
+                width: Math.min(parent.width * 1.2, parent.parent ? parent.parent.width - 48 : parent.width * 1.2)
+                height: enableDockSection.implicitHeight + Theme.spacingL * 2
+                anchors.horizontalCenter: parent.horizontalCenter
+                radius: Theme.cornerRadius
+                color: Qt.rgba(Theme.surfaceVariant.r, Theme.surfaceVariant.g,
+                               Theme.surfaceVariant.b, 0.3)
+                border.color: Qt.rgba(Theme.outline.r, Theme.outline.g,
+                                      Theme.outline.b, 0.2)
+                border.width: 1
+
+                Column {
+                    id: enableDockSection
+
+                    anchors.fill: parent
+                    anchors.margins: Theme.spacingL
+                    spacing: Theme.spacingM
+
+                    DarkToggle {
+                        width: parent.width
+                        text: "Show Dock"
+                        description: "Display a dock at the bottom of the screen with pinned and running applications"
+                        checked: SettingsData.showDock
+                        onToggled: checked => {
+                                       SettingsData.setShowDock(checked)
+                                   }
+                    }
+
+                    DarkToggle {
+                        width: parent.width
+                        text: "Enable Dock Widgets"
+                        description: "Show widgets on the left and right sides of the dock"
+                        checked: SettingsData.dockWidgetsEnabled
+                        onToggled: checked => {
+                                       SettingsData.setDockWidgetsEnabled(checked)
+                                   }
+                    }
+                }
+            }
+
+
+
+
+
+
+
+            StyledRect {
+                width: Math.min(parent.width * 1.2, parent.parent ? parent.parent.width - 48 : parent.width * 1.2)
+                height: tooltipsSection.implicitHeight + Theme.spacingL * 2
+                anchors.horizontalCenter: parent.horizontalCenter
+                radius: Theme.cornerRadius
+                color: Qt.rgba(Theme.surfaceVariant.r, Theme.surfaceVariant.g,
+                               Theme.surfaceVariant.b, 0.3)
+                border.color: Qt.rgba(Theme.outline.r, Theme.outline.g,
+                                      Theme.outline.b, 0.2)
+                border.width: 1
+                visible: SettingsData.showDock
+                opacity: visible ? 1 : 0
+
+                Column {
+                    id: tooltipsSection
+
+                    anchors.fill: parent
+                    anchors.margins: Theme.spacingL
+                    spacing: Theme.spacingM
+
+                    DarkToggle {
+                        width: parent.width
+                        text: "Show Tooltips"
+                        description: "Show application names and window titles when hovering over dock icons"
+                        checked: SettingsData.dockTooltipsEnabled
+                        onToggled: checked => {
+                                       SettingsData.setDockTooltipsEnabled(checked)
+                                   }
+                    }
+                }
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Theme.mediumDuration
+                        easing.type: Theme.emphasizedEasing
+                    }
+                }
+            }
+
+            StyledRect {
+                width: Math.min(parent.width * 1.2, parent.parent ? parent.parent.width - 48 : parent.width * 1.2)
+                height: groupAppsSection.implicitHeight + Theme.spacingL * 2
+                anchors.horizontalCenter: parent.horizontalCenter
+                radius: Theme.cornerRadius
+                color: Qt.rgba(Theme.surfaceVariant.r, Theme.surfaceVariant.g,
+                               Theme.surfaceVariant.b, 0.3)
+                border.color: Qt.rgba(Theme.outline.r, Theme.outline.g,
+                                      Theme.outline.b, 0.2)
+                border.width: 1
+                visible: SettingsData.showDock
+                opacity: visible ? 1 : 0
+
+                Column {
+                    id: groupAppsSection
+
+                    anchors.fill: parent
+                    anchors.margins: Theme.spacingL
+                    spacing: Theme.spacingM
+
+                    DarkToggle {
+                        id: groupAppsToggle
+                        width: parent.width
+                        text: "Group Apps"
+                        description: "Group multiple windows of the same application into a single dock entry"
+                        checked: SettingsData.dockGroupApps
+
+                        Binding {
+                            target: groupAppsToggle
+                            property: "checked"
+                            value: SettingsData.dockGroupApps
+                            when: SettingsData.dockGroupApps !== groupAppsToggle.checked
+                        }
+
+                        onToggled: checked => {
+                                       SettingsData.setDockGroupApps(checked)
+                                   }
+                    }
+                }
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Theme.mediumDuration
+                        easing.type: Theme.emphasizedEasing
+                    }
+                }
+            }
+
+            StyledRect {
+                width: Math.min(parent.width * 1.2, parent.parent ? parent.parent.width - 48 : parent.width * 1.2)
+                height: hideOnGamesSection.implicitHeight + Theme.spacingL * 2
+                anchors.horizontalCenter: parent.horizontalCenter
+                radius: Theme.cornerRadius
+                color: Qt.rgba(Theme.surfaceVariant.r,
+                               Theme.surfaceVariant.g,
+                               Theme.surfaceVariant.b, 0.3)
+                border.color: Qt.rgba(Theme.outline.r, Theme.outline.g,
+                                      Theme.outline.b, 0.2)
+                border.width: 1
+                visible: SettingsData.showDock
+                opacity: visible ? 1 : 0
+
+                Column {
+                    id: hideOnGamesSection
+
+                    anchors.fill: parent
+                    anchors.margins: Theme.spacingL
+                    spacing: Theme.spacingM
+
+                    DarkToggle {
+                        id: hideOnGamesToggle
+                        width: parent.width
+                        text: "Hide on Games/Apps"
+                        description: "Automatically hide the dock when games or fullscreen applications are running. Group multiple windows of the same application into a single dock entry"
+                        checked: SettingsData.dockHideOnGames
+
+                        Binding {
+                            target: hideOnGamesToggle
+                            property: "checked"
+                            value: SettingsData.dockHideOnGames
+                            when: SettingsData.dockHideOnGames !== hideOnGamesToggle.checked
+                        }
+
+                        onToggled: checked => {
+                                       SettingsData.setDockHideOnGames(checked)
+                                   }
+                    }
+                }
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Theme.mediumDuration
+                        easing.type: Theme.emphasizedEasing
+                    }
+                }
+            }
+
+            StyledRect {
+                width: Math.min(parent.width * 1.2, parent.parent ? parent.parent.width - 48 : parent.width * 1.2)
+                height: autoHideSection.implicitHeight + Theme.spacingL * 2
+                anchors.horizontalCenter: parent.horizontalCenter
+                radius: Theme.cornerRadius
+                color: Qt.rgba(Theme.surfaceVariant.r, Theme.surfaceVariant.g,
+                               Theme.surfaceVariant.b, 0.3)
+                border.color: Qt.rgba(Theme.outline.r, Theme.outline.g,
+                                      Theme.outline.b, 0.2)
+                border.width: 1
+                visible: SettingsData.showDock
+                opacity: visible ? 1 : 0
+
+                Column {
+                    id: autoHideSection
+
+                    anchors.fill: parent
+                    anchors.margins: Theme.spacingL
+                    spacing: Theme.spacingM
+
+                    DarkToggle {
+                        width: parent.width
+                        text: "Auto-hide Dock"
+                        description: "Hide the dock when not in use and reveal it when hovering near the bottom of the screen"
+                        checked: SettingsData.dockAutoHide
+                        onToggled: checked => {
+                                       SettingsData.setDockAutoHide(checked)
+                                   }
+                    }
+                }
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Theme.mediumDuration
+                        easing.type: Theme.emphasizedEasing
+                    }
+                }
+            }
+
+            StyledRect {
+                width: Math.min(parent.width * 1.2, parent.parent ? parent.parent.width - 48 : parent.width * 1.2)
+                height: expandToScreenSection.implicitHeight + Theme.spacingL * 2
+                anchors.horizontalCenter: parent.horizontalCenter
+                radius: Theme.cornerRadius
+                color: Qt.rgba(Theme.surfaceVariant.r, Theme.surfaceVariant.g,
+                               Theme.surfaceVariant.b, 0.3)
+                border.color: Qt.rgba(Theme.outline.r, Theme.outline.g,
+                                      Theme.outline.b, 0.2)
+                border.width: 1
+                visible: SettingsData.showDock
+                opacity: visible ? 1 : 0
+
+                Column {
+                    id: expandToScreenSection
+
+                    anchors.fill: parent
+                    anchors.margins: Theme.spacingL
+                    spacing: Theme.spacingM
+
+                    DarkToggle {
+                        width: parent.width
+                        text: "Expand to Screen"
+                        description: "Expand the dock to full screen width, hiding the left and right widget areas"
+                        checked: SettingsData.dockExpandToScreen
+                        onToggled: checked => {
+                                       SettingsData.setDockExpandToScreen(checked)
+                                   }
+                    }
+                }
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Theme.mediumDuration
+                        easing.type: Theme.emphasizedEasing
+                    }
+                }
+            }
+
+            StyledRect {
+                width: Math.min(parent.width * 1.2, parent.parent ? parent.parent.width - 48 : parent.width * 1.2)
+                height: centerAppsSection.implicitHeight + Theme.spacingL * 2
+                anchors.horizontalCenter: parent.horizontalCenter
+                radius: Theme.cornerRadius
+                color: Qt.rgba(Theme.surfaceVariant.r, Theme.surfaceVariant.g,
+                               Theme.surfaceVariant.b, 0.3)
+                border.color: Qt.rgba(Theme.outline.r, Theme.outline.g,
+                                      Theme.outline.b, 0.2)
+                border.width: 1
+                visible: SettingsData.showDock
+                opacity: visible ? 1 : 0
+
+                Column {
+                    id: centerAppsSection
+
+                    anchors.fill: parent
+                    anchors.margins: Theme.spacingL
+                    spacing: Theme.spacingM
+
+                    DarkToggle {
+                        width: parent.width
+                        text: "Center Apps"
+                        description: "Center the pinned and running apps in the middle of the screen"
+                        checked: SettingsData.dockCenterApps
+                        onToggled: checked => {
+                                       SettingsData.setDockCenterApps(checked)
+                                   }
+                    }
+                }
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Theme.mediumDuration
+                        easing.type: Theme.emphasizedEasing
+                    }
+                }
+            }
+
+            Column {
+                width: parent.width
+                spacing: Theme.spacingL
+                visible: SettingsData.showDock
+                opacity: visible ? 1 : 0
+
+                StyledRect {
+                    width: Math.min(parent.width * 1.2, parent.parent ? parent.parent.width - 48 : parent.width * 1.2)
+                    height: leftSection.implicitHeight + Theme.spacingL * 2
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    radius: Theme.cornerRadius
+                    color: Qt.rgba(Theme.surfaceVariant.r,
+                                   Theme.surfaceVariant.g,
+                                   Theme.surfaceVariant.b, 0.3)
+                    border.color: Qt.rgba(Theme.outline.r, Theme.outline.g,
+                                          Theme.outline.b, 0.2)
+                    border.width: 1
+
+                    WidgetsTabSection {
+                        id: leftSection
+                        anchors.fill: parent
+                        anchors.margins: Theme.spacingL
+                        title: "Left Side Widgets"
+                        titleIcon: "format_align_left"
+                        sectionId: "dockLeft"
+                        items: dockTab.getItemsForSection("dockLeft")
+                        allWidgets: dockTab.dockWidgetDefinitions
+
+                        onItemEnabledChanged: (sectionId, itemId, enabled) => {
+                                                  dockTab.handleItemEnabledChanged(sectionId, itemId, enabled)
+                                              }
+                        onItemOrderChanged: newOrder => {
+                                                dockTab.handleItemOrderChanged("dockLeft", newOrder)
+                                            }
+                        onAddWidget: sectionId => {
+                                         widgetSelectionPopup.allWidgets = dockTab.dockWidgetDefinitions
+                                         widgetSelectionPopup.targetSection = sectionId
+                                         widgetSelectionPopup.safeOpen()
+                                     }
+                        onRemoveWidget: (sectionId, widgetIndex) => {
+                                            dockTab.removeWidgetFromSection(sectionId, widgetIndex)
+                                        }
+                        onSpacerSizeChanged: (sectionId, widgetIndex, newSize) => {
+                                                 dockTab.handleSpacerSizeChanged(sectionId, widgetIndex, newSize)
+                                             }
+                    }
+                }
+
+                StyledRect {
+                    width: Math.min(parent.width * 1.2, parent.parent ? parent.parent.width - 48 : parent.width * 1.2)
+                    height: rightSection.implicitHeight + Theme.spacingL * 2
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    radius: Theme.cornerRadius
+                    color: Qt.rgba(Theme.surfaceVariant.r,
+                                   Theme.surfaceVariant.g,
+                                   Theme.surfaceVariant.b, 0.3)
+                    border.color: Qt.rgba(Theme.outline.r, Theme.outline.g,
+                                          Theme.outline.b, 0.2)
+                    border.width: 1
+
+                    WidgetsTabSection {
+                        id: rightSection
+                        anchors.fill: parent
+                        anchors.margins: Theme.spacingL
+                        title: "Right Side Widgets"
+                        titleIcon: "format_align_right"
+                        sectionId: "dockRight"
+                        items: dockTab.getItemsForSection("dockRight")
+                        allWidgets: dockTab.dockWidgetDefinitions
+
+                        onItemEnabledChanged: (sectionId, itemId, enabled) => {
+                                                  dockTab.handleItemEnabledChanged(sectionId, itemId, enabled)
+                                              }
+                        onItemOrderChanged: newOrder => {
+                                                dockTab.handleItemOrderChanged("dockRight", newOrder)
+                                            }
+                        onAddWidget: sectionId => {
+                                         widgetSelectionPopup.allWidgets = dockTab.dockWidgetDefinitions
+                                         widgetSelectionPopup.targetSection = sectionId
+                                         widgetSelectionPopup.safeOpen()
+                                     }
+                        onRemoveWidget: (sectionId, widgetIndex) => {
+                                            dockTab.removeWidgetFromSection(sectionId, widgetIndex)
+                                        }
+                        onSpacerSizeChanged: (sectionId, widgetIndex, newSize) => {
+                                                 dockTab.handleSpacerSizeChanged(sectionId, widgetIndex, newSize)
+                                             }
+                    }
+                }
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Theme.mediumDuration
+                        easing.type: Theme.emphasizedEasing
+                    }
+                }
+            }
+
+
+            StyledRect {
+                width: Math.min(parent.width * 1.2, parent.parent ? parent.parent.width - 48 : parent.width * 1.2)
+                height: transparencySection.implicitHeight + Theme.spacingL * 2
+                anchors.horizontalCenter: parent.horizontalCenter
+                radius: Theme.cornerRadius
+                color: Qt.rgba(Theme.surfaceVariant.r, Theme.surfaceVariant.g,
+                               Theme.surfaceVariant.b, 0.3)
+                border.color: Qt.rgba(Theme.outline.r, Theme.outline.g,
+                                      Theme.outline.b, 0.2)
+                border.width: 1
+                visible: SettingsData.showDock
+                opacity: visible ? 1 : 0
+
+                Column {
+                    id: transparencySection
+
+                    anchors.fill: parent
+                    anchors.margins: Theme.spacingL
+                    spacing: Theme.spacingM
+
+                    Row {
+                        width: parent.width
+                        spacing: Theme.spacingM
+
+                        DarkIcon {
+                            name: "opacity"
+                            size: Theme.iconSize
+                            color: Theme.primary
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+
+                        StyledText {
+                            text: "Dock Transparency"
+                            font.pixelSize: Theme.fontSizeLarge
+                            font.weight: Font.Medium
+                            color: Theme.surfaceText
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    DarkSlider {
+                        width: parent.width
+                        height: 32
+                        value: Math.round(SettingsData.dockTransparency * 100)
+                        minimum: 0
+                        maximum: 100
+                        unit: "%"
+                        showValue: true
+                        wheelEnabled: false
+                        onSliderValueChanged: newValue => {
+                                                  SettingsData.setDockTransparency(
+                                                      newValue / 100)
+                                              }
+                    }
+
+                    Column {
+                        width: parent.width
+                        spacing: Theme.spacingS
+
+                        StyledText {
+                            text: "Background Tint Opacity"
+                            font.pixelSize: Theme.fontSizeSmall
+                            color: Theme.surfaceText
+                            font.weight: Font.Medium
+                        }
+
+                        DarkSlider {
+                            width: parent.width
+                            height: 24
+                            value: Math.round(SettingsData.dockBackgroundTintOpacity * 100)
+                            minimum: 0
+                            maximum: 100
+                            unit: "%"
+                            showValue: true
+                            wheelEnabled: false
+                            thumbOutlineColor: Theme.surfaceContainer
+                            onSliderValueChanged: newValue => {
+                                                      SettingsData.setDockBackgroundTintOpacity(newValue / 100)
+                                                  }
+                        }
+                    }
+                }
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Theme.mediumDuration
+                        easing.type: Theme.emphasizedEasing
+                    }
+                }
+            }
+
+            StyledRect {
+                width: Math.min(parent.width * 1.2, parent.parent ? parent.parent.width - 48 : parent.width * 1.2)
+                height: bottomGapSection.implicitHeight + Theme.spacingL * 2
+                anchors.horizontalCenter: parent.horizontalCenter
+                radius: Theme.cornerRadius
+                color: Qt.rgba(Theme.surfaceVariant.r, Theme.surfaceVariant.g,
+                               Theme.surfaceVariant.b, 0.3)
+                border.color: Qt.rgba(Theme.outline.r, Theme.outline.g,
+                                      Theme.outline.b, 0.2)
+                border.width: 1
+                visible: SettingsData.showDock
+                opacity: visible ? 1 : 0
+
+                Column {
+                    id: bottomGapSection
+
+                    anchors.fill: parent
+                    anchors.margins: Theme.spacingL
+                    spacing: Theme.spacingM
+
+                    Row {
+                        width: parent.width
+                        spacing: Theme.spacingM
+
+                        DarkIcon {
+                            name: "vertical_align_bottom"
+                            size: Theme.iconSize
+                            color: Theme.primary
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+
+                        StyledText {
+                            text: "Dock Bottom Gap"
+                            font.pixelSize: Theme.fontSizeLarge
+                            font.weight: Font.Medium
+                            color: Theme.surfaceText
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    Column {
+                        width: parent.width
+                        spacing: Theme.spacingS
+
+                        StyledText {
+                            text: "Bottom Gap (0 = edge-to-edge)"
+                            font.pixelSize: Theme.fontSizeSmall
+                            color: Theme.surfaceText
+                            font.weight: Font.Medium
+                        }
+
+                        DarkSlider {
+                            width: parent.width
+                            height: 24
+                            value: SettingsData.dockBottomGap
+                            minimum: 0
+                            maximum: 64
+                            unit: ""
+                            showValue: true
+                            wheelEnabled: false
+                            thumbOutlineColor: Theme.surfaceContainer
+                            onSliderValueChanged: newValue => {
+                                                      SettingsData.setDockBottomGap(
+                                                          newValue)
+                                                  }
+                        }
+                    }
+                }
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Theme.mediumDuration
+                        easing.type: Theme.emphasizedEasing
+                    }
+                }
+            }
+
+            StyledRect {
+                width: Math.min(parent.width * 1.2, parent.parent ? parent.parent.width - 48 : parent.width * 1.2)
+                height: iconSettingsSection.implicitHeight + Theme.spacingL * 2
+                anchors.horizontalCenter: parent.horizontalCenter
+                radius: Theme.cornerRadius
+                color: Qt.rgba(Theme.surfaceVariant.r, Theme.surfaceVariant.g,
+                               Theme.surfaceVariant.b, 0.3)
+                border.color: Qt.rgba(Theme.outline.r, Theme.outline.g,
+                                      Theme.outline.b, 0.2)
+                border.width: 1
+                visible: SettingsData.showDock
+                opacity: visible ? 1 : 0
+
+                Column {
+                    id: iconSettingsSection
+
+                    anchors.fill: parent
+                    anchors.margins: Theme.spacingL
+                    spacing: Theme.spacingM
+
+                    Row {
+                        width: parent.width
+                        spacing: Theme.spacingM
+
+                        DarkIcon {
+                            name: "tune"
+                            size: Theme.iconSize
+                            color: Theme.primary
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+
+                        StyledText {
+                            text: "Icon Settings"
+                            font.pixelSize: Theme.fontSizeLarge
+                            font.weight: Font.Medium
+                            color: Theme.surfaceText
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    Column {
+                        width: parent.width
+                        spacing: Theme.spacingS
+
+                        StyledText {
+                            text: "Icon Size"
+                            font.pixelSize: Theme.fontSizeSmall
+                            color: Theme.surfaceText
+                            font.weight: Font.Medium
+                        }
+
+                        DarkSlider {
+                            width: parent.width
+                            height: 24
+                            value: SettingsData.dockIconSize
+                            minimum: 24
+                            maximum: 80
+                            unit: "px"
+                            showValue: true
+                            wheelEnabled: false
+                            thumbOutlineColor: Theme.surfaceContainer
+                            onSliderValueChanged: newValue => {
+                                                      SettingsData.setDockIconSize(
+                                                          newValue)
+                                                  }
+                        }
+                    }
+
+                    Column {
+                        width: parent.width
+                        spacing: Theme.spacingS
+
+                        StyledText {
+                            text: "Icon Spacing"
+                            font.pixelSize: Theme.fontSizeSmall
+                            color: Theme.surfaceText
+                            font.weight: Font.Medium
+                        }
+
+                        DarkSlider {
+                            width: parent.width
+                            height: 24
+                            value: SettingsData.dockIconSpacing
+                            minimum: 0
+                            maximum: 20
+                            unit: "px"
+                            showValue: true
+                            wheelEnabled: false
+                            thumbOutlineColor: Theme.surfaceContainer
+                            onSliderValueChanged: newValue => {
+                                                      SettingsData.setDockIconSpacing(
+                                                          newValue)
+                                                  }
+                        }
+                    }
+
+                    Column {
+                        width: parent.width
+                        spacing: Theme.spacingS
+
+                        StyledText {
+                            text: "Icon Drop Shadow Opacity"
+                            font.pixelSize: Theme.fontSizeSmall
+                            color: Theme.surfaceText
+                            font.weight: Font.Medium
+                        }
+
+                        DarkSlider {
+                            width: parent.width
+                            height: 24
+                            value: Math.round(SettingsData.dockIconDropShadowOpacity * 100)
+                            minimum: 0
+                            maximum: 100
+                            unit: "%"
+                            showValue: true
+                            wheelEnabled: false
+                            thumbOutlineColor: Theme.surfaceContainer
+                            onSliderValueChanged: newValue => {
+                                                      SettingsData.setDockIconDropShadowOpacity(
+                                                          newValue / 100)
+                                                  }
+                        }
+                    }
+                }
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Theme.mediumDuration
+                        easing.type: Theme.emphasizedEasing
+                    }
+                }
+            }
+
+            StyledRect {
+                width: Math.min(parent.width * 1.2, parent.parent ? parent.parent.width - 48 : parent.width * 1.2)
+                height: dockExclusiveZoneSection.implicitHeight + Theme.spacingL * 2
+                anchors.horizontalCenter: parent.horizontalCenter
+                radius: Theme.cornerRadius
+                color: Qt.rgba(Theme.surfaceVariant.r, Theme.surfaceVariant.g,
+                               Theme.surfaceVariant.b, 0.3)
+                border.color: Qt.rgba(Theme.outline.r, Theme.outline.g,
+                                      Theme.outline.b, 0.2)
+                border.width: 1
+                visible: SettingsData.showDock
+                opacity: visible ? 1 : 0
+
+                Column {
+                    id: dockExclusiveZoneSection
+
+                    anchors.fill: parent
+                    anchors.margins: Theme.spacingL
+                    spacing: Theme.spacingM
+
+                    Row {
+                        width: parent.width
+                        spacing: Theme.spacingM
+
+                        DarkIcon {
+                            name: "vertical_align_bottom"
+                            size: Theme.iconSize
+                            color: Theme.primary
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+
+                        StyledText {
+                            text: "Dock Exclusive Zone"
+                            font.pixelSize: Theme.fontSizeLarge
+                            font.weight: Font.Medium
+                            color: Theme.surfaceText
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    Column {
+                        width: parent.width
+                        spacing: Theme.spacingS
+
+                        StyledText {
+                            text: "Exclusive Zone (0 = no exclusive zone, -1 = always exclusive)"
+                            font.pixelSize: Theme.fontSizeSmall
+                            color: Theme.surfaceText
+                            font.weight: Font.Medium
+                        }
+
+                        DarkSlider {
+                            width: parent.width
+                            height: 24
+                            value: SettingsData.dockExclusiveZone
+                            minimum: -1
+                            maximum: 200
+                            unit: ""
+                            showValue: true
+                            wheelEnabled: false
+                            thumbOutlineColor: Theme.surfaceContainer
+                            onSliderValueChanged: newValue => {
+                                                      SettingsData.setDockExclusiveZone(newValue)
+                                                  }
+                        }
+                    }
+                }
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Theme.mediumDuration
+                        easing.type: Theme.emphasizedEasing
+                    }
+                }
+            }
+
+            StyledRect {
+                width: Math.min(parent.width * 1.2, parent.parent ? parent.parent.width - 48 : parent.width * 1.2)
+                height: dockPaddingSection.implicitHeight + Theme.spacingL * 2
+                anchors.horizontalCenter: parent.horizontalCenter
+                radius: Theme.cornerRadius
+                color: Qt.rgba(Theme.surfaceVariant.r, Theme.surfaceVariant.g,
+                               Theme.surfaceVariant.b, 0.3)
+                border.color: Qt.rgba(Theme.outline.r, Theme.outline.g,
+                                      Theme.outline.b, 0.2)
+                border.width: 1
+                visible: SettingsData.showDock
+                opacity: visible ? 1 : 0
+
+                Column {
+                    id: dockPaddingSection
+
+                    anchors.fill: parent
+                    anchors.margins: Theme.spacingL
+                    spacing: Theme.spacingM
+
+                    Row {
+                        width: parent.width
+                        spacing: Theme.spacingM
+
+                        DarkIcon {
+                            name: "padding"
+                            size: Theme.iconSize
+                            color: Theme.primary
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+
+                        StyledText {
+                            text: "Dock Padding"
+                            font.pixelSize: Theme.fontSizeLarge
+                            font.weight: Font.Medium
+                            color: Theme.surfaceText
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    Column {
+                        width: parent.width
+                        spacing: Theme.spacingS
+
+                        StyledText {
+                            text: "Left Padding"
+                            font.pixelSize: Theme.fontSizeSmall
+                            color: Theme.surfaceText
+                            font.weight: Font.Medium
+                        }
+
+                        DarkSlider {
+                            width: parent.width
+                            height: 24
+                            value: SettingsData.dockLeftPadding
+                            minimum: 0
+                            maximum: 100
+                            unit: ""
+                            showValue: true
+                            wheelEnabled: false
+                            thumbOutlineColor: Theme.surfaceContainer
+                            onSliderValueChanged: newValue => {
+                                                      SettingsData.setDockLeftPadding(newValue)
+                                                  }
+                        }
+                    }
+
+                    Column {
+                        width: parent.width
+                        spacing: Theme.spacingS
+
+                        StyledText {
+                            text: "Right Padding (Auto-synced with Left)"
+                            font.pixelSize: Theme.fontSizeSmall
+                            color: Theme.surfaceText
+                            font.weight: Font.Medium
+                        }
+
+                        DarkSlider {
+                            width: parent.width
+                            height: 24
+                            value: SettingsData.dockLeftPadding
+                            minimum: 0
+                            maximum: 100
+                            unit: ""
+                            showValue: true
+                            wheelEnabled: false
+                            thumbOutlineColor: Theme.surfaceContainer
+                            enabled: false
+                        }
+                    }
+
+                    Column {
+                        width: parent.width
+                        spacing: Theme.spacingS
+
+                        StyledText {
+                            text: "Top Padding"
+                            font.pixelSize: Theme.fontSizeSmall
+                            color: Theme.surfaceText
+                            font.weight: Font.Medium
+                        }
+
+                        DarkSlider {
+                            width: parent.width
+                            height: 24
+                            value: SettingsData.dockTopPadding
+                            minimum: 0
+                            maximum: 100
+                            unit: ""
+                            showValue: true
+                            wheelEnabled: false
+                            thumbOutlineColor: Theme.surfaceContainer
+                            onSliderValueChanged: newValue => {
+                                                      SettingsData.setDockTopPadding(newValue)
+                                                  }
+                        }
+                    }
+
+                    Column {
+                        width: parent.width
+                        spacing: Theme.spacingS
+
+                        StyledText {
+                            text: "Bottom Padding (Auto-synced with Top)"
+                            font.pixelSize: Theme.fontSizeSmall
+                            color: Theme.surfaceText
+                            font.weight: Font.Medium
+                        }
+
+                        DarkSlider {
+                            width: parent.width
+                            height: 24
+                            value: SettingsData.dockTopPadding
+                            minimum: 0
+                            maximum: 100
+                            unit: ""
+                            showValue: true
+                            wheelEnabled: false
+                            thumbOutlineColor: Theme.surfaceContainer
+                            enabled: false
+                        }
+                    }
+                }
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Theme.mediumDuration
+                        easing.type: Theme.emphasizedEasing
+                    }
+                }
+            }
+
+
+
+            StyledRect {
+                width: Math.min(parent.width * 1.2, parent.parent ? parent.parent.width - 48 : parent.width * 1.2)
+                height: dockBorderSection.implicitHeight + Theme.spacingL * 2
+                anchors.horizontalCenter: parent.horizontalCenter
+                radius: Theme.cornerRadius
+                color: Qt.rgba(Theme.surfaceVariant.r, Theme.surfaceVariant.g,
+                               Theme.surfaceVariant.b, 0.3)
+                border.color: Qt.rgba(Theme.outline.r, Theme.outline.g,
+                                      Theme.outline.b, 0.2)
+                border.width: 1
+
+                Column {
+                    id: dockBorderSection
+
+                    anchors.fill: parent
+                    anchors.margins: Theme.spacingL
+                    spacing: Theme.spacingM
+
+                    Row {
+                        width: parent.width
+                        spacing: Theme.spacingM
+
+                        DarkIcon {
+                            name: "border_all"
+                            size: Theme.iconSize
+                            color: Theme.primary
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+
+                        StyledText {
+                            text: "Dock Border"
+                            font.pixelSize: Theme.fontSizeLarge
+                            font.weight: Font.Medium
+                            color: Theme.surfaceText
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    DarkToggle {
+                        width: parent.width
+                        text: "Enable Border"
+                        description: "Add a customizable border around the dock"
+                        checked: SettingsData.dockBorderEnabled
+                        onToggled: checked => {
+                                       SettingsData.setDockBorderEnabled(checked)
+                                   }
+                    }
+
+                    Column {
+                        width: parent.width
+                        spacing: Theme.spacingS
+                        visible: SettingsData.dockBorderEnabled
+                        opacity: visible ? 1 : 0
+
+                        StyledText {
+                            text: "Border Width"
+                            font.pixelSize: Theme.fontSizeSmall
+                            color: Theme.surfaceText
+                            font.weight: Font.Medium
+                        }
+
+                        DarkSlider {
+                            width: parent.width
+                            height: 24
+                            value: SettingsData.dockBorderWidth
+                            minimum: 1
+                            maximum: 20
+                            unit: "px"
+                            showValue: true
+                            wheelEnabled: false
+                            onSliderValueChanged: newValue => {
+                                                      SettingsData.setDockBorderWidth(newValue)
+                                                  }
+                        }
+                    }
+
+                    Column {
+                        width: parent.width
+                        spacing: Theme.spacingS
+                        visible: SettingsData.dockBorderEnabled
+                        opacity: visible ? 1 : 0
+
+                        StyledText {
+                            text: "Border Radius"
+                            font.pixelSize: Theme.fontSizeSmall
+                            color: Theme.surfaceText
+                            font.weight: Font.Medium
+                        }
+
+                        DarkSlider {
+                            width: parent.width
+                            height: 24
+                            value: SettingsData.dockBorderRadius
+                            minimum: 0
+                            maximum: 50
+                            unit: "px"
+                            showValue: true
+                            wheelEnabled: false
+                            onSliderValueChanged: newValue => {
+                                                      SettingsData.setDockBorderRadius(newValue)
+                                                  }
+                        }
+                    }
+
+                    Column {
+                        width: parent.width
+                        spacing: Theme.spacingS
+                        visible: SettingsData.dockBorderEnabled
+                        opacity: visible ? 1 : 0
+
+                        StyledText {
+                            text: "Border Color"
+                            font.pixelSize: Theme.fontSizeSmall
+                            color: Theme.surfaceText
+                            font.weight: Font.Medium
+                        }
+
+                        Row {
+                            width: parent.width
+                            spacing: Theme.spacingS
+
+                            Column {
+                                width: (parent.width - Theme.spacingS * 3) / 4
+                                spacing: Theme.spacingS
+
+                                StyledText {
+                                    text: "Red"
+                                    font.pixelSize: Theme.fontSizeSmall
+                                    color: Theme.surfaceVariantText
+                                }
+
+                                DarkSlider {
+                                    width: parent.width
+                                    height: 24
+                                    value: Math.round(SettingsData.dockBorderRed * 255)
+                                    minimum: 0
+                                    maximum: 255
+                                    unit: ""
+                                    showValue: true
+                                    wheelEnabled: false
+                                    onSliderValueChanged: newValue => {
+                                                              SettingsData.setDockBorderRed(newValue / 255)
+                                                          }
+                                }
+                            }
+
+                            Column {
+                                width: (parent.width - Theme.spacingS * 3) / 4
+                                spacing: Theme.spacingS
+
+                                StyledText {
+                                    text: "Green"
+                                    font.pixelSize: Theme.fontSizeSmall
+                                    color: Theme.surfaceVariantText
+                                }
+
+                                DarkSlider {
+                                    width: parent.width
+                                    height: 24
+                                    value: Math.round(SettingsData.dockBorderGreen * 255)
+                                    minimum: 0
+                                    maximum: 255
+                                    unit: ""
+                                    showValue: true
+                                    wheelEnabled: false
+                                    onSliderValueChanged: newValue => {
+                                                              SettingsData.setDockBorderGreen(newValue / 255)
+                                                          }
+                                }
+                            }
+
+                            Column {
+                                width: (parent.width - Theme.spacingS * 3) / 4
+                                spacing: Theme.spacingS
+
+                                StyledText {
+                                    text: "Blue"
+                                    font.pixelSize: Theme.fontSizeSmall
+                                    color: Theme.surfaceVariantText
+                                }
+
+                                DarkSlider {
+                                    width: parent.width
+                                    height: 24
+                                    value: Math.round(SettingsData.dockBorderBlue * 255)
+                                    minimum: 0
+                                    maximum: 255
+                                    unit: ""
+                                    showValue: true
+                                    wheelEnabled: false
+                                    onSliderValueChanged: newValue => {
+                                                              SettingsData.setDockBorderBlue(newValue / 255)
+                                                          }
+                                }
+                            }
+
+                            Column {
+                                width: (parent.width - Theme.spacingS * 3) / 4
+                                spacing: Theme.spacingS
+
+                                StyledText {
+                                    text: "Alpha"
+                                    font.pixelSize: Theme.fontSizeSmall
+                                    color: Theme.surfaceVariantText
+                                }
+
+                                DarkSlider {
+                                    width: parent.width
+                                    height: 24
+                                    value: Math.round(SettingsData.dockBorderAlpha * 100)
+                                    minimum: 0
+                                    maximum: 100
+                                    unit: "%"
+                                    showValue: true
+                                    wheelEnabled: false
+                                    onSliderValueChanged: newValue => {
+                                                              SettingsData.setDockBorderAlpha(newValue / 100)
+                                                          }
+                                }
+                            }
+                        }
+                    }
+
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: Theme.mediumDuration
+                            easing.type: Theme.emphasizedEasing
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    property var dockWidgetDefinitions: [{
+            "id": "launcherButton",
+            "text": "App Launcher",
+            "description": "Quick access to application launcher",
+            "icon": "apps",
+            "enabled": true
+        }, {
+            "id": "workspaceSwitcher",
+            "text": "Workspace Switcher",
+            "description": "Shows current workspace and allows switching",
+            "icon": "view_module",
+            "enabled": true
+        }, {
+            "id": "focusedWindow",
+            "text": "Focused Window",
+            "description": "Display currently focused application title",
+            "icon": "window",
+            "enabled": true
+        }, {
+            "id": "runningApps",
+            "text": "Running Apps",
+            "description": "Shows all running applications with focus indication",
+            "icon": "apps",
+            "enabled": true
+        }, {
+            "id": "clock",
+            "text": "Clock",
+            "description": "Current time and date display",
+            "icon": "schedule",
+            "enabled": true
+        }, {
+            "id": "weather",
+            "text": "Weather Widget",
+            "description": "Current weather conditions and temperature",
+            "icon": "wb_sunny",
+            "enabled": true
+        }, {
+            "id": "music",
+            "text": "Media Controls",
+            "description": "Control currently playing media",
+            "icon": "music_note",
+            "enabled": true
+        }, {
+            "id": "clipboard",
+            "text": "Clipboard Manager",
+            "description": "Access clipboard history",
+            "icon": "content_paste",
+            "enabled": true
+        }, {
+            "id": "cpuUsage",
+            "text": "CPU Usage",
+            "description": "CPU usage indicator",
+            "icon": "memory",
+            "enabled": DgopService.dgopAvailable,
+            "warning": !DgopService.dgopAvailable ? "Requires 'dgop' tool" : undefined
+        }, {
+            "id": "memUsage",
+            "text": "Memory Usage",
+            "description": "Memory usage indicator",
+            "icon": "storage",
+            "enabled": DgopService.dgopAvailable,
+            "warning": !DgopService.dgopAvailable ? "Requires 'dgop' tool" : undefined
+        }, {
+            "id": "cpuTemp",
+            "text": "CPU Temperature",
+            "description": "CPU temperature display",
+            "icon": "device_thermostat",
+            "enabled": DgopService.dgopAvailable,
+            "warning": !DgopService.dgopAvailable ? "Requires 'dgop' tool" : undefined
+        }, {
+            "id": "gpuTemp",
+            "text": "GPU Temperature",
+            "description": "GPU temperature display",
+            "icon": "auto_awesome_mosaic",
+            "warning": !DgopService.dgopAvailable ? "Requires 'dgop' tool" : "This widget prevents GPU power off states, which can significantly impact battery life on laptops. It is not recommended to use this on laptops with hybrid graphics.",
+            "enabled": DgopService.dgopAvailable
+        }, {
+            "id": "systemTray",
+            "text": "System Tray",
+            "description": "System notification area icons",
+            "icon": "notifications",
+            "enabled": true
+        }, {
+            "id": "privacyIndicator",
+            "text": "Privacy Indicator",
+            "description": "Shows when microphone, camera, or screen sharing is active",
+            "icon": "privacy_tip",
+            "enabled": true
+        }, {
+            "id": "controlCenterButton",
+            "text": "Control Center",
+            "description": "Access to system controls and settings",
+            "icon": "settings",
+            "enabled": true
+        }, {
+            "id": "notificationButton",
+            "text": "Notification Center",
+            "description": "Access to notifications and do not disturb",
+            "icon": "notifications",
+            "enabled": true
+        }, {
+            "id": "battery",
+            "text": "Battery",
+            "description": "Battery level and power management",
+            "icon": "battery_std",
+            "enabled": true
+        }, {
+            "id": "vpn",
+            "text": "VPN",
+            "description": "VPN status and quick connect",
+            "icon": "vpn_lock",
+            "enabled": true
+        }, {
+            "id": "idleInhibitor",
+            "text": "Idle Inhibitor",
+            "description": "Prevent screen timeout",
+            "icon": "motion_sensor_active",
+            "enabled": true
+        }, {
+            "id": "spacer",
+            "text": "Spacer",
+            "description": "Customizable empty space",
+            "icon": "more_horiz",
+            "enabled": true
+        }, {
+            "id": "separator",
+            "text": "Separator",
+            "description": "Visual divider between widgets",
+            "icon": "remove",
+            "enabled": true
+        }, {
+            "id": "network_speed_monitor",
+            "text": "Network Speed Monitor",
+            "description": "Network download and upload speed display",
+            "icon": "network_check",
+            "warning": !DgopService.dgopAvailable ? "Requires 'dgop' tool" : undefined,
+            "enabled": DgopService.dgopAvailable
+        }, {
+            "id": "keyboard_layout_name",
+            "text": "Keyboard Layout Name",
+            "description": "Displays the active keyboard layout and allows switching",
+            "icon": "keyboard",
+            "enabled": true
+        }, {
+            "id": "notepadButton",
+            "text": "Notepad",
+            "description": "Quick access to notepad",
+            "icon": "assignment",
+            "enabled": true
+        }, {
+            "id": "colorPicker",
+            "text": "Color Picker",
+            "description": "Quick access to color picker",
+            "icon": "palette",
+            "enabled": true
+        }, {
+            "id": "systemUpdate",
+            "text": "System Update",
+            "description": "Check for system updates",
+            "icon": "update",
+            "enabled": SystemUpdateService.distributionSupported
+        }, {
+            "id": "settingsButton",
+            "text": "Settings Button",
+            "description": "Quick access to settings modal",
+            "icon": "settings",
+            "enabled": true
+        }, {
+            "id": "darkDash",
+            "text": "Dark Dash",
+            "description": "Quick access dashboard with overview, media, and weather",
+            "icon": "dashboard",
+            "enabled": true
+        }, {
+            "id": "applications",
+            "text": "Applications",
+            "description": "macOS Tahoe-style application launcher with categorized apps",
+            "icon": "apps",
+            "enabled": true
+        }, {
+            "id": "volumeMixerButton",
+            "text": "Volume Mixer",
+            "description": "Quick access to system and application volume controls",
+            "icon": "volume_up",
+            "enabled": true
+        }, {
+            "id": "launchpad",
+            "text": "Launchpad",
+            "description": "Full-screen, grid-first launcher styled after macOS/iOS",
+            "icon": "grid_view",
+            "enabled": true
+        }]
+
+    function addWidgetToSection(widgetId, targetSection) {
+        var widgetObj = {
+            "id": widgetId,
+            "enabled": true
+        }
+        if (widgetId === "spacer")
+            widgetObj.size = 20
+
+        var widgets = []
+        if (targetSection === "dockLeft") {
+            widgets = SettingsData.dockLeftWidgets.slice()
+            widgets.push(widgetObj)
+            SettingsData.setDockLeftWidgets(widgets)
+        } else if (targetSection === "dockRight") {
+            widgets = SettingsData.dockRightWidgets.slice()
+            widgets.push(widgetObj)
+            SettingsData.setDockRightWidgets(widgets)
+        }
+    }
+
+    function removeWidgetFromSection(sectionId, widgetIndex) {
+        var widgets = []
+        if (sectionId === "dockLeft") {
+            widgets = SettingsData.dockLeftWidgets.slice()
+            if (widgetIndex >= 0 && widgetIndex < widgets.length) {
+                widgets.splice(widgetIndex, 1)
+                SettingsData.setDockLeftWidgets(widgets)
+            }
+        } else if (sectionId === "dockRight") {
+            widgets = SettingsData.dockRightWidgets.slice()
+            if (widgetIndex >= 0 && widgetIndex < widgets.length) {
+                widgets.splice(widgetIndex, 1)
+                SettingsData.setDockRightWidgets(widgets)
+            }
+        }
+    }
+
+    function handleItemEnabledChanged(sectionId, itemId, enabled) {
+        var widgets = []
+        if (sectionId === "dockLeft")
+            widgets = SettingsData.dockLeftWidgets.slice()
+        else if (sectionId === "dockRight")
+            widgets = SettingsData.dockRightWidgets.slice()
+
+        for (var i = 0; i < widgets.length; i++) {
+            var widget = widgets[i]
+            var widgetId = typeof widget === "string" ? widget : widget.id
+            if (widgetId === itemId) {
+                if (typeof widget === "string") {
+                    widgets[i] = {
+                        "id": widget,
+                        "enabled": enabled
+                    }
+                } else {
+                    var newWidget = {
+                        "id": widget.id,
+                        "enabled": enabled
+                    }
+                    if (widget.size !== undefined)
+                        newWidget.size = widget.size
+                    widgets[i] = newWidget
+                }
+                break
+            }
+        }
+
+        if (sectionId === "dockLeft")
+            SettingsData.setDockLeftWidgets(widgets)
+        else if (sectionId === "dockRight")
+            SettingsData.setDockRightWidgets(widgets)
+    }
+
+    function handleItemOrderChanged(sectionId, newOrder) {
+        if (sectionId === "dockLeft")
+            SettingsData.setDockLeftWidgets(newOrder)
+        else if (sectionId === "dockRight")
+            SettingsData.setDockRightWidgets(newOrder)
+    }
+
+    function handleSpacerSizeChanged(sectionId, widgetIndex, newSize) {
+        var widgets = []
+        if (sectionId === "dockLeft")
+            widgets = SettingsData.dockLeftWidgets.slice()
+        else if (sectionId === "dockRight")
+            widgets = SettingsData.dockRightWidgets.slice()
+
+        if (widgetIndex >= 0 && widgetIndex < widgets.length) {
+            var widget = widgets[widgetIndex]
+            var widgetId = typeof widget === "string" ? widget : widget.id
+            if (widgetId === "spacer") {
+                if (typeof widget === "string") {
+                    widgets[widgetIndex] = {
+                        "id": widget,
+                        "enabled": true,
+                        "size": newSize
+                    }
+                } else {
+                    var newWidget = {
+                        "id": widget.id,
+                        "enabled": widget.enabled,
+                        "size": newSize
+                    }
+                    widgets[widgetIndex] = newWidget
+                }
+            }
+        }
+
+        if (sectionId === "dockLeft")
+            SettingsData.setDockLeftWidgets(widgets)
+        else if (sectionId === "dockRight")
+            SettingsData.setDockRightWidgets(widgets)
+    }
+
+    function getItemsForSection(sectionId) {
+        var widgets = []
+        var widgetData = []
+        if (sectionId === "dockLeft")
+            widgetData = SettingsData.dockLeftWidgets || []
+        else if (sectionId === "dockRight")
+            widgetData = SettingsData.dockRightWidgets || []
+
+        widgetData.forEach(widget => {
+            var widgetId = typeof widget === "string" ? widget : widget.id
+            var widgetDef = dockWidgetDefinitions.find(def => def.id === widgetId)
+            if (widgetDef) {
+                var item = {
+                    "id": widgetId,
+                    "text": widgetDef.text,
+                    "description": widgetDef.description,
+                    "icon": widgetDef.icon,
+                    "enabled": typeof widget === "string" ? true : widget.enabled
+                }
+                if (widgetId === "spacer" && widget.size !== undefined)
+                    item.size = widget.size
+                widgets.push(item)
+            }
+        })
+
+        return widgets
+    }
+
+    WidgetSelectionPopup {
+        id: widgetSelectionPopup
+
+        onWidgetSelected: (widgetId, targetSection) => {
+                             dockTab.addWidgetToSection(widgetId, targetSection)
+                         }
+    }
+}

@@ -1,0 +1,30 @@
+general {
+    # Matugen-generated border colors
+    col.active_border = rgb(96ccf8)
+    col.inactive_border = rgb(101417)
+    border_size = 4
+}
+
+misc {
+    background_color = rgba(10140fFF)
+}
+
+plugin {
+    hyprbars {
+        bar_text_font = Rubik, Geist, AR One Sans, Reddit Sans, Inter, Roboto, Ubuntu, Noto Sans, sans-serif
+        bar_height = 20
+        bar_padding = 6
+        bar_button_padding = 3
+        bar_precedence_over_border = true
+        bar_part_of_window = false
+
+        bar_color = rgba(10140f20)
+        col.text = rgba(e0e4da90)
+
+        hyprbars-button = rgba(ff5f57aa), 10, ×, hyprctl dispatch killactive
+        hyprbars-button = rgba(ffbd2eaa), 10, −, hyprctl dispatch minimize
+        hyprbars-button = rgba(28c940aa), 10, +, hyprctl dispatch fullscreen 1
+    }
+}
+
+windowrulev2 = bordercolor rgba(a2d398AA) rgba(a2d39877),pinned:1

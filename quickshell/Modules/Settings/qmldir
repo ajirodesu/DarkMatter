@@ -1,0 +1,53 @@
+module qs.Modules.Settings
+AboutTab 1.0 AboutTab.qml
+DesktopWidgetBrowser 1.0 DesktopWidgetBrowser.qml
+DesktopWidgetInstanceCard 1.0 DesktopWidgetInstanceCard.qml
+DesktopWidgetsTab 1.0 DesktopWidgetsTab.qml
+DesktopWidgetsStylingTab 1.0 DesktopWidgetsStylingTab.qml
+DisplaysTab 1.0 DisplaysTab.qml
+DockTab 1.0 DockTab.qml
+FontsTab 1.0 FontsTab.qml
+HyprlandThemeTab 1.0 HyprlandThemeTab.qml
+LauncherTab 1.0 LauncherTab.qml
+PersonalizationTab 1.0 PersonalizationTab.qml
+PositioningTab 1.0 PositioningTab.qml
+SettingsSection 1.0 SettingsSection.qml
+SettingsDisplayPicker 1.0 SettingsDisplayPicker.qml
+ThemeColorsTab 1.0 ThemeColorsTab.qml
+ColorPaletteTab 1.0 ColorPaletteTab.qml
+TextColorTab 1.0 TextColorTab.qml
+TransparencyTab 1.0 TransparencyTab.qml
+ColorAdjustmentsTab 1.0 ColorAdjustmentsTab.qml
+BordersShadowsTab 1.0 BordersShadowsTab.qml
+SystemThemeTab 1.0 SystemThemeTab.qml
+SettingsThemesIconsTab 1.0 SettingsThemesIconsTab.qml
+DarkDashTab 1.0 DarkDashTab.qml
+IconTintingTab 1.0 IconTintingTab.qml
+VisualEffectsTab 1.0 VisualEffectsTab.qml
+ColorsThemesTab 1.0 ColorsThemesTab.qml
+AppearanceTab 1.0 AppearanceTab.qml
+ComponentsTab 1.0 ComponentsTab.qml
+SystemSettingsTab 1.0 SystemSettingsTab.qml
+TimeTab 1.0 TimeTab.qml
+TopBarTab 1.0 TopBarTab.qml
+WeatherTab 1.0 WeatherTab.qml
+WidgetSelectionPopup 1.0 WidgetSelectionPopup.qml
+WidgetsTabSection 1.0 WidgetsTabSection.qml
+WidgetTweaksTab 1.0 WidgetTweaksTab.qml
+WindowSizingTab 1.0 WindowSizingTab.qml
+SoundTab 1.0 SoundTab.qml
+DefaultAppsTab 1.0 DefaultAppsTab.qml
+DisplayConfigTab 1.0 DisplayConfigTab.qml
+MonitorConfigWidget 1.0 MonitorConfigWidget.qml
+MonitorArrangementWidget 1.0 MonitorArrangementWidget.qml
+KeyboardLangTab 1.0 KeyboardLangTab.qml
+NetworkTab 1.0 NetworkTab.qml
+BluetoothTab 1.0 BluetoothTab.qml
+PowerTab 1.0 PowerTab.qml
+KeybindsTab 1.0 KeybindsTab.qml
+WallpaperTab 1.0 WallpaperTab.qml
+
+
+
+
+

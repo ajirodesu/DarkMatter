@@ -1,0 +1,32 @@
+[Unit]
+Description=Quickshell Wayland Shell
+Documentation=https://github.com/Swordfish90/quickshell
+After=graphical-session.target
+Wants=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/quickshell
+Restart=on-failure
+RestartSec=3
+Environment="QT_QPA_PLATFORM=wayland"
+Environment="QT_WAYLAND_RECONNECT=1"
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.config/quickshell
+ReadWritePaths=%h/.cache/quickshell
+ReadWritePaths=%h/.local/share/quickshell
+ReadWritePaths=%h/.local/state/quickshell
+
+# Resource limits
+MemoryMax=2G
+CPUQuota=200%
+
+[Install]
+WantedBy=graphical-session.target
+
+
